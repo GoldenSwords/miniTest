@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<title>Title</title>
+<link rel="stylesheet" th:href="@{static/zTree-zTree_v3-master/v3/css/zTreeStyle/zTreeStyle.css}" />
+</head>
+<body>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">列表<a href="/logout">LogOut</a></h3>
+		</div>
+		<div class="panel-body">
+			<ul id="tree" class="ztree" style="width:230px; overflow:auto;"></ul>
+		</div>
+		<div sec:authorize="hasRole('ROLE_ADMIN')">
+			可以访问
+		</div>
+		<div th:include="incloud :: copys">sss</div>
+	</div>
+</body>
+<script type="text/javascript" th:src="@{static/jquery-3.1.0.min.js}" ></script>
+<script type="text/javascript" th:src="@{static/zTree-zTree_v3-master/v3/js/jquery.ztree.all.js}" ></script>
+<script type="text/javascript" th:inline="javascript">
+    var zTreeObj,
+        setting = {
+            view: {
+                selectedMulti: false
+            },
+            data:{
+                key: {
+                    title: "urlText",
+                    name: "urlText",
+                    children: "children",
+                    url: "url"
+                },
+                simpleData: {
+                    enable: true,
+                    idKey: "urlId",
+                    pIdKey: "urlPid",
+                    rootPId: 0
+                }
+			}
+        },
+        zTreeNodes = [[${roleList}]];
+    zTreeObj = $.fn.zTree.init($("#tree"), setting, zTreeNodes);
+</script>
+</html>
