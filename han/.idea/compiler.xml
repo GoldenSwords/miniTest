@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="boot0" />
+        <module name="boot1" />
+        <module name="boot3jpa" />
+        <module name="boot3mybatis" />
+        <module name="boot_thymeleaf" />
+        <module name="boot_thymeleaf_security (1)" />
+      </profile>
+      <profile name="Annotation profile for han" enabled="true">
+        <sourceOutputDir name="../boot_thymeleaf_security2/target/generated-sources/annotations" />
+        <sourceTestOutputDir name="../boot_thymeleaf_security2/target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="boot_thymeleaf_security" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="boot0" target="1.8" />
+      <module name="boot1" target="1.8" />
+      <module name="boot2" target="1.8" />
+      <module name="boot3jpa" target="1.8" />
+      <module name="boot3mybatis" target="1.8" />
+      <module name="boot_thymeleaf" target="1.8" />
+      <module name="boot_thymeleaf_security" target="1.8" />
+      <module name="boot_thymeleaf_security (1)" target="1.8" />
+      <module name="han" target="1.6" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
