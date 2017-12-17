@@ -1,2 +1,2 @@
 # miniTest
-just test demo
+demo with springboot thymleaf mybatis jpa security
