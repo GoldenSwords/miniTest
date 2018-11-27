@@ -1,0 +1,1 @@
+[{"id":1,"parentId":0,"children":[{"id":2,"parentId":1,"children":[{"id":3,"parentId":2,"children":[],"name":"专业科"}],"name":"服务中心"},{"id":5,"parentId":1,"children":[{"id":6,"parentId":5,"children":[],"name":"开发组"},{"id":7,"parentId":5,"children":[],"name":"测试组"}],"name":"HTDF"}],"name":"气象局"}]
