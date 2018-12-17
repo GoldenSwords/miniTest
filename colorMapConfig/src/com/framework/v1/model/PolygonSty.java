@@ -1,8 +1,6 @@
-package com.framework.model;
+package com.framework.v1.model;
 
 import org.meteoinfo.shape.PolygonShape;
-
-import java.util.List;
 
 public class PolygonSty {
     PolygonShape polygonShape;

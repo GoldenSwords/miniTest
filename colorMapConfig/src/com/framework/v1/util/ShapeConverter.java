@@ -1,4 +1,4 @@
-package com.framework.util;
+package com.framework.v1.util;
 
 import org.meteoinfo.global.Extent;
 import org.meteoinfo.global.PointD;

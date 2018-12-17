@@ -1,10 +1,9 @@
-package com.framework.util;
+package com.framework.v1.util;
 
-import com.framework.model.MapTextModel;
-import com.framework.model.PolygonModel;
+import com.framework.v1.model.MapTextModel;
+import com.framework.v1.model.PolygonModel;
+import com.framework.v1.model.PolylineModel;
 import org.meteoinfo.global.Extent;
-import org.meteoinfo.shape.Polygon;
-import org.meteoinfo.shape.Polyline;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ public class PolygonConfig {
     int width = 500;
     int height = 500;
     String filePath;
-    List<Polyline> polylines;
+    List<PolylineModel> polylines;
     List<PolygonModel> polygons;
     List<MapTextModel> texts;
     int offsetX;
@@ -28,7 +27,7 @@ public class PolygonConfig {
         this.fullScreen = fullScreen;
     }
 
-    public PolygonConfig(Extent extent, int width, int height, String filePath, List<Polyline> polylines, List<PolygonModel> polygons, List<MapTextModel> texts, int offsetX, int offsetY, boolean fullScreen) {
+    public PolygonConfig(Extent extent, int width, int height, String filePath, List<PolylineModel> polylines, List<PolygonModel> polygons, List<MapTextModel> texts, int offsetX, int offsetY, boolean fullScreen) {
         this.extent = extent;
         this.width = width;
         this.height = height;
@@ -89,11 +88,11 @@ public class PolygonConfig {
         this.filePath = filePath;
     }
 
-    public List<Polyline> getPolylines() {
+    public List<PolylineModel> getPolylines() {
         return polylines;
     }
 
-    public void setPolylines(List<Polyline> polylines) {
+    public void setPolylines(List<PolylineModel> polylines) {
         this.polylines = polylines;
     }
 

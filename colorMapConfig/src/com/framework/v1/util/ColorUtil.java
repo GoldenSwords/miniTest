@@ -1,4 +1,4 @@
-package com.framework.util;
+package com.framework.v1.util;
 
 import java.util.Random;
 

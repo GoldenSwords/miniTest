@@ -1,7 +1,6 @@
-package com.framework.util;
+package com.framework.v1.util;
 
-import com.framework.model.DataModel;
-import org.meteoinfo.data.GridData;
+import com.framework.v1.model.DataModel;
 import org.meteoinfo.data.StationData;
 
 import java.util.List;

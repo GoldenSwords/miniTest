@@ -1,9 +1,10 @@
-package com.framework;
+package com.framework.v1;
 
-import com.framework.model.MapTextModel;
-import com.framework.model.PolygonModel;
-import com.framework.util.GridDataConfig;
-import com.framework.util.PolygonConfig;
+import com.framework.v1.model.MapTextModel;
+import com.framework.v1.model.PolygonModel;
+import com.framework.v1.model.PolylineModel;
+import com.framework.v1.util.GridDataConfig;
+import com.framework.v1.util.PolygonConfig;
 import org.meteoinfo.data.DataTypes;
 import org.meteoinfo.data.GridData;
 import org.meteoinfo.data.StationData;
@@ -19,7 +20,6 @@ import org.meteoinfo.layer.VectorLayer;
 import org.meteoinfo.layout.LayoutLegend;
 import org.meteoinfo.layout.LegendStyles;
 import org.meteoinfo.layout.MapLayout;
-import org.meteoinfo.legend.ColorBreak;
 import org.meteoinfo.legend.LegendManage;
 import org.meteoinfo.legend.LegendScheme;
 import org.meteoinfo.map.MapView;
@@ -141,11 +141,14 @@ public class ColorMapUtil {
             }
         }
         if(config.getPolylines()!=null){
-            VectorLayer polylineModelLayer = new VectorLayer(ShapeTypes.Polyline);
-            PolylineShape polylineShape = new PolylineShape();
-            polylineShape.setPolylines(config.getPolylines());
-            polylineModelLayer.addShape(polylineShape);
-            mapView.addLayer(polylineModelLayer);
+            for (PolylineModel polylineModel:config.getPolylines()) {
+                VectorLayer polylineModelLayer = new VectorLayer(ShapeTypes.Polyline);
+                PolylineShape polylineShape = new PolylineShape();
+                polylineShape.setPolylines(polylineModel.getPolyline());
+                polylineModelLayer.addShape(polylineShape);
+                polylineModelLayer.setLegendScheme(LegendManage.createSingleSymbolLegendScheme(ShapeTypes.Polyline,polylineModel.getColor(),1));
+                mapView.addLayer(polylineModelLayer);
+            }
         }
         if(config.getTexts()!=null){
             VectorLayer pointLayer = new VectorLayer(ShapeTypes.Point);

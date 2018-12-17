@@ -1,6 +1,6 @@
-package com.framework.util;
+package com.framework.v1.util;
 
-import com.framework.model.DataModel;
+import com.framework.v1.model.DataModel;
 import org.meteoinfo.global.Extent;
 
 import java.util.ArrayList;

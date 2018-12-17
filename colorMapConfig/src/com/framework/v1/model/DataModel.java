@@ -1,4 +1,4 @@
-package com.framework.model;
+package com.framework.v1.model;
 
 /**
  * 数据模型

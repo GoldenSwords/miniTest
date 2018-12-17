@@ -1,10 +1,9 @@
-package com.framework.util;
+package com.framework.v1.util;
 
 import org.meteoinfo.data.mapdata.MapDataManage;
 import org.meteoinfo.global.Extent;
 import org.meteoinfo.layer.VectorLayer;
 import org.meteoinfo.shape.PolygonShape;
-import org.meteoinfo.shape.Shape;
 
 import java.util.List;
 

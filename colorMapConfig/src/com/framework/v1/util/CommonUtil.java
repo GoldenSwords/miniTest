@@ -1,7 +1,7 @@
-package com.framework.util;
+package com.framework.v1.util;
 
-import com.framework.model.PolygonModel;
-import com.framework.model.PolylineModel;
+import com.framework.v1.model.PolygonModel;
+import com.framework.v1.model.PolylineModel;
 import org.meteoinfo.global.Extent;
 import org.meteoinfo.global.PointD;
 import org.meteoinfo.shape.Polygon;
