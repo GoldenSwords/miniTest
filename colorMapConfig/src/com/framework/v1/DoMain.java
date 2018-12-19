@@ -16,12 +16,12 @@ import java.util.List;
 
 public class DoMain {
 
-    public static int x = 100;
-    public static int y = 100;
-    public static int n = 10;
-    public static int w = 700;
-    public static int h = 500;
-    public static Extent extent = new Extent(100,120,30,40);
+    public static int x = 100; //横向格点数量
+    public static int y = 100; //纵向格点数据
+    public static int n = 10;   //需计算的临近点数量
+    public static int w = 700; // 图片宽
+    public static int h = 500; // 图片高
+    public static Extent extent = new Extent(100,120,30,40);//自定义展示区域
 
     public static void doGridDataConfig(){
         System.out.println(LocalDateTime.now() + " Grid Start");
@@ -46,7 +46,7 @@ public class DoMain {
         valueList.add(70d);
         valueList.add(80d);
         valueList.add(90d);
-        VectorLayer vectorLayer = LayerReaderUtil.readOutLayer("E:\\压缩包\\arcgisSHP\\四川省农气地图181023\\县边界.shp");
+        VectorLayer vectorLayer = LayerReaderUtil.readOutLayer("E:\\demo\\miniTest\\colorMapConfig\\shp\\县边界.shp");
         extent = vectorLayer.getExtent();
         List<Polyline> list = new ArrayList<>();
         for (int i = 0; i < vectorLayer.getShapes().size(); i++) {

@@ -38,7 +38,16 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * 色斑图生成工具类 v1
+ */
 public class ColorMapUtil {
+    /**
+     * 格点数据生成
+     * @param config
+     * @param stationData
+     * @throws Exception
+     */
     public static void colorMap(GridDataConfig config, StationData stationData) throws Exception{
         File file = new File(config.getFilePath());
         if (!file.exists()){
@@ -95,6 +104,11 @@ public class ColorMapUtil {
         }
     }
 
+    /**
+     * 自定义数据生成
+     * @param config
+     * @throws Exception
+     */
     public static void colorMap(PolygonConfig config) throws Exception{
         File file = new File(config.getFilePath());
         if (!file.exists()){
@@ -195,6 +209,12 @@ public class ColorMapUtil {
 
     }
 
+    /**
+     * 动态生成色标
+     * @param config
+     * @param gridData
+     * @return
+     */
     private static VectorLayer getLegendScheme(GridDataConfig config, GridData gridData) {
         Double[] valuesB =config.getValue().stream().sorted(Comparator.naturalOrder()).toArray(Double[]::new);
         Color[] colors = config.getColor().stream().toArray(Color[]::new);

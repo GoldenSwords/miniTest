@@ -1,0 +1,8 @@
+v1 版本 已初步完善 
+
+meteoinfo工具需要根据实际情况定制开发 
+执行器 src.com.framework.v1.DoMain.java 直接运行就可以
+
+v1 待完善功能
+	图片的删除功能
+	图片的base64转码功能
