@@ -3,6 +3,7 @@ package com.framework.v1;
 import com.framework.v1.model.MapTextModel;
 import com.framework.v1.model.PolygonModel;
 import com.framework.v1.model.PolylineModel;
+import com.framework.v1.util.DataTranslater;
 import com.framework.v1.util.GridDataConfig;
 import com.framework.v1.util.PolygonConfig;
 import org.meteoinfo.data.DataTypes;
@@ -34,6 +35,8 @@ import org.meteoinfo.table.DataTable;
 
 import java.awt.*;
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -45,15 +48,13 @@ public class ColorMapUtil {
     /**
      * 格点数据生成
      * @param config
-     * @param stationData
      * @throws Exception
      */
-    public static void colorMap(GridDataConfig config, StationData stationData) throws Exception{
+    public static void colorMap(GridDataConfig config) throws Exception{
         File file = new File(config.getFilePath());
         if (!file.exists()){
             file.mkdirs();
         }
-        GridDataSetting setting = new GridDataSetting();
         MapLayout layout = new MapLayout();
         layout.setPageBounds(new Rectangle((int)(config.getWidth()*1), (int)(config.getHeight()*1)));
         MapView mapView = layout.getActiveMapFrame().getMapView();
@@ -64,17 +65,22 @@ public class ColorMapUtil {
         }else{
             layout.getMapFrames().get(0).setLayoutBounds(new Rectangle((int)(config.getWidth()*0.1), (int)(config.getHeight()*0.1),(int)(config.getWidth()*0.8), (int)(config.getHeight()*0.8)));
         }
-        setting.dataExtent = config.getExtent();
-        setting.xNum = config.getX();
-        setting.yNum = config.getY();
-        InterpolationSetting interSet = new InterpolationSetting();
+        //网格参数设置
+        GridDataSetting setting = new GridDataSetting();
+        setting.dataExtent = config.getExtent();//网格范围
+        setting.xNum = config.getX();//网格横向数量
+        setting.yNum = config.getY();//网格纵向数量
+        InterpolationSetting interSet = new InterpolationSetting();//转换参数设置
         interSet.setGridDataSetting(setting);
-        interSet.setInterpolationMethod(InterpolationMethods.IDW_Neighbors);
-        interSet.setMinPointNum(config.getN());
-        GridData gridData = stationData.interpolateData(interSet);
+        interSet.setInterpolationMethod(InterpolationMethods.IDW_Neighbors);//临近点插值法
+        interSet.setMinPointNum(config.getN());//设置临近点计算数量
+        GridData gridData = config.getStationData().interpolateData(interSet);
+        System.out.println(String.format("max::%f,min::%f  %s",gridData.getMaxValue(),gridData.getMinValue(),LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
         VectorLayer vectorLayer = getLegendScheme(config,gridData);
+        System.out.println(String.format("makeLayer::%s",LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
         if(config.getMaskLayer()!=null){
             MapLayer layer = config.getMaskLayer();
+            layer.setMaskout(true);
             mapView.addLayer(layer);
         }
         mapView.addLayer(vectorLayer);
@@ -107,9 +113,10 @@ public class ColorMapUtil {
     /**
      * 自定义数据生成
      * @param config
-     * @throws Exception
+     * @throws Exception synchronized
      */
     public static void colorMap(PolygonConfig config) throws Exception{
+        System.out.println(String.format("taskStart::%s  %s","CUSTOM", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
         File file = new File(config.getFilePath());
         if (!file.exists()){
             file.mkdirs();
@@ -206,7 +213,7 @@ public class ColorMapUtil {
             layout.getMapFrames().get(0).setGridYDelt(0.1);
             layout.exportToPicture(config.getFilePath());
         }
-
+        System.out.println(String.format("taskEnd::%s  %s","CUSTOM", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
     }
 
     /**

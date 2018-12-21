@@ -1,7 +1,9 @@
 package com.framework.v1.util;
 
 import com.framework.v1.model.DataModel;
+import org.meteoinfo.data.GridData;
 import org.meteoinfo.data.StationData;
+import org.meteoinfo.geoprocess.analysis.InterpolationSetting;
 
 import java.util.List;
 import java.util.Map;
@@ -13,6 +15,7 @@ public class DataTranslater {
 
     /**
      * listToStationData
+     * List数据解析为站点数据
      * @param list
      * @param lonKey
      * @param latKey
@@ -31,6 +34,26 @@ public class DataTranslater {
 
     /**
      * listToStationData
+     * List数据解析为站点数据
+     * @param list
+     * @param missValue 无效值
+     * @param limit_max 最大值限制
+     * @param limit_min 最小值限制
+     * @return
+     */
+    public static StationData getData(List<DataModel> list,double missValue, double limit_max, double limit_min){
+        StationData stationData = new StationData();
+        for (int i = 0; i < list.size(); i++) {
+            if(list.get(i).getValue()-missValue!=0&&list.get(i).getValue()>=limit_min&&list.get(i).getValue()<=limit_max){
+                stationData.addData("",list.get(i).getLon(),list.get(i).getLat(),list.get(i).getValue());
+            }
+        }
+        return stationData;
+    }
+
+    /**
+     * listToStationData
+     * List数据解析为站点数据
      * @param list
      * @return
      */

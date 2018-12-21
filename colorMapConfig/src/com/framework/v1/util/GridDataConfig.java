@@ -1,5 +1,6 @@
 package com.framework.v1.util;
 
+import org.meteoinfo.data.StationData;
 import org.meteoinfo.global.Extent;
 import org.meteoinfo.layer.MapLayer;
 import org.meteoinfo.shape.Polyline;
@@ -12,11 +13,13 @@ import java.util.List;
  * 格点数据配置类
  */
 public class GridDataConfig {
+    StationData stationData;
     int x = 500;//横向格点数
     int y = 500;//纵向格点数
     int n = 10;//临近点数量
     int width = 500;//宽
     int height = 500;//高
+    int dilution = 0;//稀释倍率
     Extent extent;//区域
     String filePath;//生成图片路径
     List<Color> color = new ArrayList<>();//色标配置
@@ -24,6 +27,22 @@ public class GridDataConfig {
     MapLayer maskLayer;//过滤层
     List<Polyline> borderLine;//边界线
     boolean fullScreen;//是否全屏
+
+    public StationData getStationData() {
+        return stationData;
+    }
+
+    public void setStationData(StationData stationData) {
+        this.stationData = stationData;
+    }
+
+    public int getDilution() {
+        return dilution;
+    }
+
+    public void setDilution(int dilution) {
+        this.dilution = dilution;
+    }
 
     public boolean isFullScreen() {
         return fullScreen;
@@ -33,7 +52,7 @@ public class GridDataConfig {
         this.fullScreen = fullScreen;
     }
 
-    public GridDataConfig(int x, int y, int n, int width, int height, Extent extent, String filePath, List<Color> color, List<Double> value, MapLayer maskLayer, List<Polyline> borderLine, boolean fullScreen) {
+    public GridDataConfig(int x, int y, int n, int width, int height, Extent extent, String filePath, List<Color> color, List<Double> value, MapLayer maskLayer, List<Polyline> borderLine, boolean fullScreen, StationData stationData) {
         this.x = x;
         this.y = y;
         this.n = n;
@@ -46,6 +65,7 @@ public class GridDataConfig {
         this.maskLayer = maskLayer;
         this.borderLine = borderLine;
         this.fullScreen = fullScreen;
+        this.stationData = stationData;
     }
 
     public List<Polyline> getBorderLine() {
