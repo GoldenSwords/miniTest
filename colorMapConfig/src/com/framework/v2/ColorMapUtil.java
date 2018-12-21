@@ -1,14 +1,14 @@
-package com.framework.v1;
+package com.framework.v2;
 
-import com.framework.v1.model.MapTextModel;
-import com.framework.v1.model.PolygonModel;
-import com.framework.v1.model.PolylineModel;
-import com.framework.v1.util.DataTranslater;
-import com.framework.v1.util.GridDataConfig;
-import com.framework.v1.util.PolygonConfig;
+import com.alibaba.fastjson.JSONObject;
+import com.framework.v2.model.MapTextModel;
+import com.framework.v2.model.PolygonModel;
+import com.framework.v2.model.PolylineModel;
+import com.framework.v2.util.CommonUtil;
+import com.framework.v2.util.GridDataConfig;
+import com.framework.v2.util.PolygonConfig;
 import org.meteoinfo.data.DataTypes;
 import org.meteoinfo.data.GridData;
-import org.meteoinfo.data.StationData;
 import org.meteoinfo.data.mapdata.AttributeTable;
 import org.meteoinfo.data.mapdata.Field;
 import org.meteoinfo.data.meteodata.DrawMeteoData;
@@ -50,7 +50,8 @@ public class ColorMapUtil {
      * @param config
      * @throws Exception
      */
-    public synchronized static void colorMap(GridDataConfig config) throws Exception{
+    public synchronized static JSONObject colorMap(GridDataConfig config) throws Exception{
+        JSONObject result = new JSONObject();
         File file = new File(config.getFilePath());
         if (!file.exists()){
             file.mkdirs();
@@ -89,7 +90,8 @@ public class ColorMapUtil {
             PolylineShape shape = new PolylineShape();
             shape.setPolylines(config.getBorderLine());
             borderLayer.addShape(shape);
-            borderLayer.setLegendScheme(LegendManage.createSingleSymbolLegendScheme(ShapeTypes.Polyline,Color.BLACK,1));
+            LegendScheme legendScheme = LegendManage.createSingleSymbolLegendScheme(ShapeTypes.Polyline,Color.BLACK,config.getBorderWidth());
+            borderLayer.setLegendScheme(legendScheme);
             mapView.addLayer(borderLayer);
         }
         if(config.getMaskLayer()!=null){
@@ -108,6 +110,13 @@ public class ColorMapUtil {
         }else{
             layout.exportToPicture(config.getFilePath());
         }
+        if(config.isDelete()){
+            result.put("pngBase64", CommonUtil.imgToBase64(config.getFilePath()));
+            new File(config.getFilePath()).delete();
+        }else {
+            result.put("path",config.getFilePath());
+        }
+        return result;
     }
 
     /**
@@ -115,8 +124,9 @@ public class ColorMapUtil {
      * @param config
      * @throws Exception synchronized
      */
-    public synchronized static void colorMap(PolygonConfig config) throws Exception{
+    public synchronized static JSONObject colorMap(PolygonConfig config) throws Exception{
         System.out.println(String.format("taskStart::%s  %s","CUSTOM", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
+        JSONObject result = new JSONObject();
         File file = new File(config.getFilePath());
         if (!file.exists()){
             file.mkdirs();
@@ -213,7 +223,14 @@ public class ColorMapUtil {
             layout.getMapFrames().get(0).setGridYDelt(0.1);
             layout.exportToPicture(config.getFilePath());
         }
+        if(config.isDelete()){
+            result.put("pngBase64", CommonUtil.imgToBase64(config.getFilePath()));
+            new File(config.getFilePath()).delete();
+        }else {
+            result.put("path",config.getFilePath());
+        }
         System.out.println(String.format("taskEnd::%s  %s","CUSTOM", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
+        return result;
     }
 
     /**
