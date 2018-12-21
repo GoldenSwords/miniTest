@@ -56,9 +56,10 @@ public class ColorMapUtil {
         if (!file.exists()){
             file.mkdirs();
         }
-        MapLayout layout = new MapLayout();
-        layout.setPageBounds(new Rectangle((int)(config.getWidth()*1), (int)(config.getHeight()*1)));
-        MapView mapView = layout.getActiveMapFrame().getMapView();
+        MapLayout layout = new MapLayout(); // 设置图片面板
+        layout.setPageBounds(new Rectangle((int)(config.getWidth()*1), (int)(config.getHeight()*1))); // 设置图片页面尺寸
+        MapView mapView = layout.getActiveMapFrame().getMapView(); // 获取图片显示页面
+        //全屏设置
         if(config.isFullScreen()){
             mapView = new MapView();
             mapView.zoomToExtent(config.getExtent());
@@ -75,16 +76,18 @@ public class ColorMapUtil {
         interSet.setGridDataSetting(setting);
         interSet.setInterpolationMethod(InterpolationMethods.IDW_Neighbors);//临近点插值法
         interSet.setMinPointNum(config.getN());//设置临近点计算数量
-        GridData gridData = config.getStationData().interpolateData(interSet);
+        GridData gridData = config.getStationData().interpolateData(interSet);//插值流程
         System.out.println(String.format("max::%f,min::%f  %s",gridData.getMaxValue(),gridData.getMinValue(),LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
-        VectorLayer vectorLayer = getLegendScheme(config,gridData);
+        VectorLayer vectorLayer = getLegendScheme(config,gridData);//数据绘制为图层
         System.out.println(String.format("makeLayer::%s",LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
+        //设置遮罩层
         if(config.getMaskLayer()!=null){
             MapLayer layer = config.getMaskLayer();
             layer.setMaskout(true);
             mapView.addLayer(layer);
         }
         mapView.addLayer(vectorLayer);
+        //设置边界线
         if(config.getBorderLine()!=null){
             VectorLayer borderLayer = new VectorLayer(ShapeTypes.Polyline);
             PolylineShape shape = new PolylineShape();
@@ -94,22 +97,26 @@ public class ColorMapUtil {
             borderLayer.setLegendScheme(legendScheme);
             mapView.addLayer(borderLayer);
         }
+        //开启遮罩
         if(config.getMaskLayer()!=null){
             vectorLayer.setMaskout(true);
             mapView.getMaskOut().setMask(true);
             mapView.getMaskOut().setMaskLayer(config.getMaskLayer().getLayerName());
         }
+        //色标设置
         LayoutLegend layoutLegend = layout.addLegend((int)(config.getWidth()*0.8),(int)(config.getHeight()*0.5));
         layoutLegend.setLegendLayer(vectorLayer);
         layoutLegend.setLegendStyle(LegendStyles.Normal);
         layoutLegend.setTitle("titles");
         layout.getMapFrames().get(0).setGridXDelt(0.1);
         layout.getMapFrames().get(0).setGridYDelt(0.1);
+        //输出图片
         if(config.isFullScreen()){
             mapView.exportToPicture(config.getFilePath());
         }else{
             layout.exportToPicture(config.getFilePath());
         }
+        //文件删除操作
         if(config.isDelete()){
             result.put("pngBase64", CommonUtil.imgToBase64(config.getFilePath()));
             new File(config.getFilePath()).delete();
@@ -131,9 +138,10 @@ public class ColorMapUtil {
         if (!file.exists()){
             file.mkdirs();
         }
-        MapLayout layout = new MapLayout();
-        layout.setPageBounds(new Rectangle((int)(config.getWidth()*1), (int)(config.getHeight()*1)));
-        MapView mapView = layout.getActiveMapFrame().getMapView();
+        MapLayout layout = new MapLayout(); // 设置图片面板
+        layout.setPageBounds(new Rectangle((int)(config.getWidth()*1), (int)(config.getHeight()*1))); // 设置图片页面尺寸
+        MapView mapView = layout.getActiveMapFrame().getMapView(); // 获取图片显示页面
+        //全屏设置
         if(config.isFullScreen()){
             mapView = new MapView();
             mapView.zoomToExtent(config.getExtent());
@@ -141,9 +149,11 @@ public class ColorMapUtil {
         }else{
             layout.getMapFrames().get(0).setLayoutBounds(new Rectangle((int)(config.getWidth()*0.1), (int)(config.getHeight()*0.1),(int)(config.getWidth()*0.8), (int)(config.getHeight()*0.8)));
         }
+        //设置显示区域
         VectorLayer layer = new VectorLayer(ShapeTypes.Polygon);
         layer.setExtent(config.getExtent());
         mapView.addLayer(layer);
+        //添加自定义区块
         if(config.getPolygons()!=null){
             List<PolygonModel> list = config.getPolygons();
             boolean flag = false;
@@ -164,13 +174,14 @@ public class ColorMapUtil {
                     i--;
                     flag = false;
                 }
-                LegendScheme legendSchemes = LegendManage.createSingleSymbolLegendScheme(ShapeTypes.Polygon,color,1);
+                LegendScheme legendSchemes = LegendManage.createSingleSymbolLegendScheme(ShapeTypes.Polygon,color,1);//设置区块颜色及边界线宽度
                 polygonShape.setPolygons(polygons);
                 polygonModelLayer.addShape(polygonShape);
                 polygonModelLayer.setLegendScheme(legendSchemes);
                 mapView.addLayer(polygonModelLayer);
             }
         }
+        //添加自定义线条
         if(config.getPolylines()!=null){
             for (PolylineModel polylineModel:config.getPolylines()) {
                 VectorLayer polylineModelLayer = new VectorLayer(ShapeTypes.Polyline);
@@ -181,6 +192,7 @@ public class ColorMapUtil {
                 mapView.addLayer(polylineModelLayer);
             }
         }
+        //添加站点文本
         if(config.getTexts()!=null){
             VectorLayer pointLayer = new VectorLayer(ShapeTypes.Point);
             List<MapTextModel> tests = config.getTexts();
@@ -216,6 +228,7 @@ public class ColorMapUtil {
             pointLayer.addLabels();
             mapView.addLayer(pointLayer);
         }
+        //全屏显示
         if(config.isFullScreen()){
             mapView.exportToPicture(config.getFilePath());
         }else {
@@ -223,6 +236,7 @@ public class ColorMapUtil {
             layout.getMapFrames().get(0).setGridYDelt(0.1);
             layout.exportToPicture(config.getFilePath());
         }
+        //文件删除操作
         if(config.isDelete()){
             result.put("pngBase64", CommonUtil.imgToBase64(config.getFilePath()));
             new File(config.getFilePath()).delete();
@@ -234,7 +248,7 @@ public class ColorMapUtil {
     }
 
     /**
-     * 动态生成色标
+     * 图层制作
      * @param config
      * @param gridData
      * @return
@@ -246,7 +260,9 @@ public class ColorMapUtil {
         for (int i = 0; i < valuesB.length; i++) {
             values[i] = valuesB[i].doubleValue();
         }
+        //创建色标
         LegendScheme als =  LegendManage.createGraduatedLegendScheme(values, colors, ShapeTypes.Polygon, gridData.getMinValue(), gridData.getMaxValue());
+        //根据色标和数据生成色斑图层
         return DrawMeteoData.createShadedLayer(gridData, als, "GridData", "Data", true);
     }
 }
