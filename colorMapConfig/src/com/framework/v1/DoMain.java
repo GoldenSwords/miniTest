@@ -43,12 +43,6 @@ public class DoMain {
         List<Color> colorList = Arrays.asList(Color.decode("#11003E"),Color.decode("#1B0060"),Color.decode("#240082"),Color.decode("#2C009F"),Color.decode("#3500BF"),Color.decode("#6002BD"),Color.decode("#6F00E8"),Color.decode("#8A02AC"),Color.decode("#E1025B"),Color.decode("#DE0515"));//自定义色标
         List<Double> valueList = Arrays.asList(10d,20d,30d,40d,50d,60d,70d,80d,90d);//自定义色阶
         VectorLayer vectorLayer = LayerReaderUtil.readOutLayer("E:\\demo\\miniTest\\colorMapConfig\\shp\\县边界.shp");
-        List<Polyline> list = new ArrayList<>();
-        for (int i = 0; i < vectorLayer.getShapes().size(); i++) {
-            Polyline polyline = new Polyline();
-            polyline.setPointList(vectorLayer.getShapes().get(i).getPoints());
-            list.add(polyline);
-        }
         List<DataModel> dataModels = DataConverter.staticDataForModel(1000,extent);
        try {
            ColorMapUtil.colorMap(new GridDataConfig(x,y,n,w,h,extent,"e:/tmp/全屏过滤_格点数据.png",colorList,valueList,vectorLayer,null,true,DataTranslater.getData(dataModels)));
