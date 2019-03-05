@@ -1,5 +1,6 @@
 package com.framework.v2.util;
 
+import org.meteoinfo.data.GridData;
 import org.meteoinfo.data.StationData;
 import org.meteoinfo.global.Extent;
 import org.meteoinfo.layer.MapLayer;
@@ -14,6 +15,7 @@ import java.util.List;
  */
 public class GridDataConfig {
     StationData stationData;
+    GridData gridData;
 
     int x = 500;//横向格点数
     int y = 500;//纵向格点数
@@ -51,6 +53,14 @@ public class GridDataConfig {
         this.borderWidth = borderWidth < 1 ? 1 : borderWidth ;
         this.fullScreen = fullScreen;
         this.isDelete = isDelete;
+    }
+
+    public GridData getGridData() {
+        return gridData;
+    }
+
+    public void setGridData(GridData gridData) {
+        this.gridData = gridData;
     }
 
     public boolean isDelete() {

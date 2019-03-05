@@ -67,19 +67,23 @@ public class ColorMapUtil {
         }else{
             layout.getMapFrames().get(0).setLayoutBounds(new Rectangle((int)(config.getWidth()*0.1), (int)(config.getHeight()*0.1),(int)(config.getWidth()*0.8), (int)(config.getHeight()*0.8)));
         }
-        //网格参数设置
-        GridDataSetting setting = new GridDataSetting();
-        setting.dataExtent = config.getExtent();//网格范围
-        setting.xNum = config.getX();//网格横向数量
-        setting.yNum = config.getY();//网格纵向数量
-        InterpolationSetting interSet = new InterpolationSetting();//转换参数设置
-        interSet.setGridDataSetting(setting);
-        interSet.setInterpolationMethod(InterpolationMethods.IDW_Neighbors);//临近点插值法
-        interSet.setMinPointNum(config.getN());//设置临近点计算数量
-        GridData gridData = config.getStationData().interpolateData(interSet);//插值流程
-        System.out.println(String.format("max::%f,min::%f  %s",gridData.getMaxValue(),gridData.getMinValue(),LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
+        GridData gridData = null;
+        if(config.getGridData()!=null){
+            gridData = config.getGridData();
+        }else{
+            //网格参数设置
+            GridDataSetting setting = new GridDataSetting();
+            setting.dataExtent = config.getExtent();//网格范围
+            setting.xNum = config.getX();//网格横向数量
+            setting.yNum = config.getY();//网格纵向数量
+            InterpolationSetting interSet = new InterpolationSetting();//转换参数设置
+            interSet.setGridDataSetting(setting);
+            interSet.setInterpolationMethod(InterpolationMethods.IDW_Neighbors);//临近点插值法
+            interSet.setMinPointNum(config.getN());//设置临近点计算数量
+            gridData = config.getStationData().interpolateData(interSet);//插值流程
+        }
+
         VectorLayer vectorLayer = getLegendScheme(config,gridData);//数据绘制为图层
-        System.out.println(String.format("makeLayer::%s",LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
         //设置遮罩层
         if(config.getMaskLayer()!=null){
             MapLayer layer = config.getMaskLayer();
@@ -132,7 +136,6 @@ public class ColorMapUtil {
      * @throws Exception synchronized
      */
     public synchronized static JSONObject colorMap(PolygonConfig config) throws Exception{
-        System.out.println(String.format("taskStart::%s  %s","CUSTOM", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
         JSONObject result = new JSONObject();
         File file = new File(config.getFilePath());
         if (!file.exists()){
@@ -243,7 +246,6 @@ public class ColorMapUtil {
         }else {
             result.put("path",config.getFilePath());
         }
-        System.out.println(String.format("taskEnd::%s  %s","CUSTOM", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)));
         return result;
     }
 
