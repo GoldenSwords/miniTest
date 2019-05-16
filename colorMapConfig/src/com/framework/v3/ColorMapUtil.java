@@ -1,12 +1,13 @@
-package com.framework.v2;
+package com.framework.v3;
 
 import com.alibaba.fastjson.JSONObject;
-import com.framework.v2.model.MapTextModel;
-import com.framework.v2.model.PolygonModel;
-import com.framework.v2.model.PolylineModel;
-import com.framework.v2.util.CommonUtil;
-import com.framework.v2.util.GridDataConfig;
-import com.framework.v2.util.PolygonConfig;
+import com.framework.v3.model.MapTextModel;
+import com.framework.v3.model.PolygonModel;
+import com.framework.v3.model.PolylineModel;
+import com.framework.v3.util.CommonUtil;
+import com.framework.v3.util.GridDataConfig;
+import com.framework.v3.util.PolygonConfig;
+import com.framework.v3.util.ShapeConverter;
 import org.meteoinfo.data.DataTypes;
 import org.meteoinfo.data.GridData;
 import org.meteoinfo.data.mapdata.AttributeTable;
@@ -21,13 +22,17 @@ import org.meteoinfo.layer.VectorLayer;
 import org.meteoinfo.layout.LayoutLegend;
 import org.meteoinfo.layout.LegendStyles;
 import org.meteoinfo.layout.MapLayout;
+import org.meteoinfo.legend.ColorBreak;
 import org.meteoinfo.legend.LegendManage;
 import org.meteoinfo.legend.LegendScheme;
 import org.meteoinfo.map.MapView;
-import org.meteoinfo.shape.PointShape;
-import org.meteoinfo.shape.PolygonShape;
-import org.meteoinfo.shape.PolylineShape;
-import org.meteoinfo.shape.ShapeTypes;
+import org.meteoinfo.projection.ProjectionInfo;
+import org.meteoinfo.projection.proj4j.datum.Datum;
+import org.meteoinfo.projection.proj4j.proj.CylindricalProjection;
+import org.meteoinfo.projection.proj4j.proj.ObliqueMercatorProjection;
+import org.meteoinfo.projection.proj4j.proj.Projection;
+import org.meteoinfo.shape.*;
+import org.meteoinfo.shape.Polygon;
 import org.meteoinfo.table.DataColumn;
 import org.meteoinfo.table.DataColumnCollection;
 import org.meteoinfo.table.DataRow;
@@ -35,10 +40,8 @@ import org.meteoinfo.table.DataTable;
 
 import java.awt.*;
 import java.io.File;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -86,6 +89,7 @@ public class ColorMapUtil {
         }
 
         VectorLayer vectorLayer = getLegendScheme(config,gridData);//数据绘制为图层
+//        String name, String[] params, Datum datum, Projection proj
         //设置遮罩层
         if(config.getMaskLayer()!=null){
             MapLayer layer = config.getMaskLayer();
@@ -168,18 +172,25 @@ public class ColorMapUtil {
             interSet.setMinPointNum(config.getN());//设置临近点计算数量
             gridData = config.getStationData().interpolateData(interSet);//插值流程
         }
-
-        VectorLayer vectorLayer = getLegendScheme(config,gridData);//数据绘制为图层
         //设置遮罩层
         if(config.getMaskLayer()!=null){
             MapLayer layer = config.getMaskLayer();
             layer.setMaskout(true);
+            if(config.isLine()){
+                VectorLayer layerf = (VectorLayer)layer;
+                List<ColorBreak> list = layer.getLegendScheme().getLegendBreaks();
+                for (int i = 0; i < list.size(); i++) {
+                    list.get(i).setColor(new Color(255,255,255,0));
+                }
+            }
             mapView.addLayer(layer);
         }
+        VectorLayer vectorLayer = getLegendScheme(config,gridData);//数据绘制为图层
         mapView.addLayer(vectorLayer);
         //设置边界线
         if(config.getBorderLine()!=null){
             VectorLayer borderLayer = new VectorLayer(ShapeTypes.Polyline);
+            borderLayer.setExtent(config.getExtent());
             PolylineShape shape = new PolylineShape();
             shape.setPolylines(config.getBorderLine());
             borderLayer.addShape(shape);
@@ -201,6 +212,7 @@ public class ColorMapUtil {
         layout.getMapFrames().get(0).setGridXDelt(0.1);
         layout.getMapFrames().get(0).setGridYDelt(0.1);
         //输出图片
+        mapView.zoomToExtent(config.getExtent());
         if(config.isFullScreen()){
             mapView.exportToPicture(config.getFilePath());
         }else{
@@ -349,8 +361,13 @@ public class ColorMapUtil {
             values[i] = valuesB[i].doubleValue();
         }
         //创建色标
-        LegendScheme als =  LegendManage.createGraduatedLegendScheme(values, colors, ShapeTypes.Polygon, gridData.getMinValue(), gridData.getMaxValue());
+//        LegendScheme als =  LegendManage.createGraduatedLegendScheme(values, colors, ShapeTypes.Polygon, gridData.getMinValue(), gridData.getMaxValue());
+        LegendScheme als =  LegendManage.createGraduatedLegendScheme(values, colors, ShapeTypes.Polyline, gridData.getMinValue(), gridData.getMaxValue());
         //根据色标和数据生成色斑图层
+        if(config.isLine()){ // 等值线图
+            return DrawMeteoData.createContourLayer(gridData,"GridData","Data");
+        }
+        // 色斑图
         return DrawMeteoData.createShadedLayer(gridData, als, "GridData", "Data", true);
     }
 }

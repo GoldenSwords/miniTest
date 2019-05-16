@@ -28,7 +28,6 @@ import org.w3c.dom.Element;
  */
 public class ColorBreak {
     // <editor-fold desc="Variables">
-
     private BreakTypes _breakType;
     private Object _startValue;
     private Object _endValue;
