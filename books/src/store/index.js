@@ -10,10 +10,12 @@ import role from '@/store/modules/role'
 import relations from '@/store/modules/relations'
 import hot from '@/store/modules/hot'
 import dept from '@/store/modules/dept'
+import route from '@/store/modules/route'
 
 Vue.use(Vuex)
 const stroe = new Vuex.Store({
   modules: {
+    route,
     base,
     login,
     dept,

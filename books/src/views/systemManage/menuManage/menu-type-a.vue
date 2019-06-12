@@ -52,6 +52,11 @@
                 <el-option v-for="item in methods" :label="item" :value="item" :key="item"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="路由" v-if="menuItem.type === types[1].code">
+              <el-select v-model="menuItem.route" :disabled="op.show">
+                <el-option v-for="item in routeList" :label="item.name" :value="item.url" :key="item.url"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="资源类型">
               <el-select v-model="menuItem.type" :disabled="op.show">
                 <el-option v-for="item in types" :label="item.label" :value="item.code" :key="item.code"></el-option>
@@ -69,11 +74,13 @@
 </template>
 
 <script>
+import { getRouteList } from '@/api/route'
 import { getMenuTree, addMenu, delMenuById, updateMenuById, getMenuById } from '@/api/menu'
 export default {
   name: 'menu-type-a',
   data () {
     return {
+      routeList: [],
       menuPanelTop: 0,
       menuPanelLeft: 0,
       treeLoding: false,
@@ -93,6 +100,7 @@ export default {
       clickrow: {},
       menuItem: {
         menuId: 2,
+        route: '',
         menuParentId: 1,
         type: '',
         icon: '',
@@ -115,6 +123,9 @@ export default {
   },
   mounted () {
     this.getList()
+    getRouteList().then(resp => {
+      this.routeList = resp.data.data
+    })
   },
   methods: {
     addMenus () {

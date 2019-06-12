@@ -125,4 +125,34 @@ export default({ mock }) => {
       return store.getters.RELATION_UPDATE_DEPT_ROLE(JSON.parse(opt.body))
     }
   )
+  // 路由列表
+  Mock.mock(
+    '/route/s', 'get', (opt) => {
+      return store.getters.ROUTE_DATA_List(JSON.parse(opt.body))
+    }
+  )
+  // 路由详情
+  Mock.mock(
+    '/route', 'get', (opt) => {
+      return store.getters.ROUTE_DATA_Detail(JSON.parse(opt.body))
+    }
+  )
+  // 路由修改
+  Mock.mock(
+    '/route', 'post', (opt) => {
+      return store.getters.ROUTE_DATA_UPDATE(JSON.parse(opt.body))
+    }
+  )
+  // 路由新增
+  Mock.mock(
+    '/route', 'put', (opt) => {
+      return store.getters.ROUTE_DATA_ADD(JSON.parse(opt.body))
+    }
+  )
+  // 路由删除
+  Mock.mock(
+    '/route', 'delete', (opt) => {
+      return store.getters.ROUTE_DATA_DELETE(JSON.parse(opt.body))
+    }
+  )
 }

@@ -33,7 +33,7 @@
               <el-form-item label="部门名称">
                 <el-input v-model="deptform.deptName" :disabled="op.show"></el-input>
               </el-form-item>
-              <el-form-item label="权限">
+              <el-form-item label="角色">
                 <el-select v-model="roleSelect" multiple :disabled="op.show">
                   <el-option v-for="(item) in roles" :key="item.roleID" :label="item.roleName" :value="item.roleID"></el-option>
                 </el-select>
